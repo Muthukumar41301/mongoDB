@@ -29,6 +29,7 @@ public interface StudentRepository extends MongoRepository<Student,String> {
     @Aggregation("{ $group : { _id : null , totalCgpa : { $sum : $cgpa} } }")
     Long totalCgpa();
 
-    @Aggregation("{ $group : { _id : null , minCgpa : { $min : $cgpa}, maxCgpa : { $max : $cgpa} } }")
+    @Aggregation("{ $group : { _id : null , minCgpa : { $min : $cgpa}, maxCgpa : { $max : $cgpa}, avgCgpa : { $avg : $cgpa}, totalCgpa : { $sum : $cgpa } ," +
+            "studentCount : { $sum : 1 }, firstName : { $first : $name }, lastName : { $last : $name } } }")
     CgpaStats fetchCgpaStats();
 }

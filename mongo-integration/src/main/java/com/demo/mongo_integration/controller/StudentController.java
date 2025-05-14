@@ -3,10 +3,9 @@ package com.demo.mongo_integration.controller;
 import com.demo.mongo_integration.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
 import com.demo.mongo_integration.service.StudentService;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -68,14 +67,17 @@ public class StudentController {
         return studentService.fetchStudentDataByCountryOrArrears(country, hasArrears);
     }
 
-    @Operation(summary = "Get students by enrollment date range", description = "Retrieve students enrolled between the specified start and end dates (format: dd-MM-yyyy)")
     @GetMapping("/getStudentByEnrollmentDate")
+    @Operation(
+            summary = "Get students by enrollment date range",
+            description = "Retrieve students enrolled between the specified start and end dates (format: dd-MM-yyyy)"
+    )
     public List<Student> fetchStudentDataByEnrollmentDate(
             @Parameter(description = "Start date of enrollment (dd-MM-yyyy)")
-            @RequestParam @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate startDate,
 
             @Parameter(description = "End date of enrollment (dd-MM-yyyy)")
-            @RequestParam @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate endDate) {
         return studentService.fetchStudentDataByEnrollmentDate(startDate, endDate);
     }
 
