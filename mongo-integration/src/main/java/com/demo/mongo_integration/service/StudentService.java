@@ -3,14 +3,13 @@ package com.demo.mongo_integration.service;
 import com.demo.mongo_integration.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
 import com.demo.mongo_integration.repository.StudentRepository;
-import com.demo.mongo_integration.repository.WFStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -18,6 +17,7 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @CachePut(value = "student", key = "#user.id")
     public void addStudentData(Student student) {
         studentRepository.save(student);
     }
@@ -30,6 +30,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    @Cacheable(value = "student", key = "#id")
     public Optional<Student> fetchStudentDataById(String id) {
         return studentRepository.findById(id);
     }

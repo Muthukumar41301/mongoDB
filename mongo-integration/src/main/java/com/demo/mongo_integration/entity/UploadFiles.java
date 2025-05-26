@@ -5,10 +5,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collation = "posts")
-public class Post {
+@Document(collection = "file_details")
+public class UploadFiles {
 
     @Id
-    private String id;
-    private String title;
+    private Long id;
+
+    private String fileName;
+
+    private byte[] file;
 }

@@ -3,9 +3,15 @@ package com.demo.mongo_integration.controller;
 import com.demo.mongo_integration.entity.*;
 import com.demo.mongo_integration.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("user")
@@ -16,6 +22,9 @@ public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private FilesRepository filesRepository;
 
     @PostMapping
     public Users createUser(@RequestBody Users user) {
@@ -60,6 +69,21 @@ public class UserController {
             return "Role deleted successfully";
         } else {
             return "Role not found with id: " + id;
+        }
+    }
+
+    @GetMapping("/file/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+        Optional<UploadFiles> fileOptional = filesRepository.findById(Long.valueOf(id));
+        if (fileOptional.isPresent()) {
+            UploadFiles file = fileOptional.get();
+            System.out.println(Arrays.toString(file.getFile()));
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "Testing.pdf");
+            return new ResponseEntity<>(file.getFile(), headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
