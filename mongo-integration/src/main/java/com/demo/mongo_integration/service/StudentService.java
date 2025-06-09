@@ -6,6 +6,9 @@ import com.demo.mongo_integration.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +19,9 @@ public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @CachePut(value = "student", key = "#user.id")
     public void addStudentData(Student student) {
@@ -76,6 +82,18 @@ public class StudentService {
     }
 
     public CgpaStats fetchCgpaStats() {
-        return studentRepository.fetchCgpaStats();
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.group()
+                        .min("cgpa").as("minCgpa")
+                        .max("cgpa").as("maxCgpa")
+                        .avg("cgpa").as("avgCgpa")
+                        .sum("cgpa").as("totalCgpa")
+                        .count().as("studentCount")
+                        .first("name").as("firstName")
+                        .last("name").as("lastName")
+        );
+
+        AggregationResults<CgpaStats> results = mongoTemplate.aggregate(aggregation, "student", CgpaStats.class);
+        return results.getUniqueMappedResult();
     }
 }
