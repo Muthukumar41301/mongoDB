@@ -1,6 +1,6 @@
 package com.demo.mongo_integration.service;
 
-import com.demo.mongo_integration.CgpaStats;
+import com.demo.mongo_integration.model.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
 import com.demo.mongo_integration.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.demo.mongo_integration.controller;
 
-import com.demo.mongo_integration.CgpaStats;
+import com.demo.mongo_integration.model.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
 import com.demo.mongo_integration.service.StudentService;
 import io.swagger.v3.oas.annotations.*;

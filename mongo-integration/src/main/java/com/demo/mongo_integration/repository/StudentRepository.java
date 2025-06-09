@@ -1,6 +1,6 @@
 package com.demo.mongo_integration.repository;
 
-import com.demo.mongo_integration.CgpaStats;
+import com.demo.mongo_integration.model.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -1,4 +1,4 @@
-package com.demo.mongo_integration;
+package com.demo.mongo_integration.model;
 
 import lombok.Data;
 
