@@ -1,10 +1,11 @@
 package com.demo.mongo_integration.service;
 
-import com.demo.mongo_integration.model.CgpaStats;
 import com.demo.mongo_integration.entity.Student;
+import com.demo.mongo_integration.model.CgpaStats;
 import com.demo.mongo_integration.repository.StudentRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -12,8 +13,10 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
+@Log4j2
 @Service
 public class StudentService {
 
@@ -23,9 +26,19 @@ public class StudentService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @CachePut(value = "student", key = "#user.id")
+    @Autowired
+    private RedisCacheProvider redisCacheProvider;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public void addStudentData(Student student) {
-        studentRepository.save(student);
+        try {
+            String studentJson = objectMapper.writeValueAsString(student);
+            redisCacheProvider.addData("student", student.getId(), studentJson);
+        } catch (Exception e) {
+            log.error("Failed to store student in Redis", e);
+        }
     }
 
     public void addMultipleStudentsData(List<Student> students) {
