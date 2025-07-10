@@ -1,10 +1,12 @@
 package com.demo.mongo_integration.entity;
 
+import com.demo.mongo_integration.model.SubjectMark;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -25,8 +27,7 @@ public class Student {
     @Field("has_arrears")
     private boolean hasArrears;
 
-    @Field("course_list")
-    private List<String> courseList;
+    private List<SubjectMark> subjectMarks;
 
     private Address address;
 

@@ -19,15 +19,15 @@ public interface StudentRepository extends MongoRepository<Student,String> {
 
     List<Student> findByEnrollmentDateBetweenOrderByEnrollmentDate(LocalDate startDate, LocalDate endDate);
 
-    String findByNameIgnoreCase(String name);
-
     List<Student> findByCgpaGreaterThanEqual(Double cgpa);
 
+    List<Student> findBySubjectMarks_SubjectName(String subjectName);
+
     @Aggregation("{ $group : { _id : null, averageCgpa : { $avg : $cgpa} } }")
-    Long avgCgpa();
+    Double avgCgpa();
 
     @Aggregation("{ $group : { _id : null , totalCgpa : { $sum : $cgpa} } }")
-    Long totalCgpa();
+    Double totalCgpa();
 
     @Aggregation("{ $group : { _id : null , minCgpa : { $min : $cgpa}, maxCgpa : { $max : $cgpa}, avgCgpa : { $avg : $cgpa}, totalCgpa : { $sum : $cgpa } ," +
             "studentCount : { $sum : 1 }, firstName : { $first : $name }, lastName : { $last : $name } } }")

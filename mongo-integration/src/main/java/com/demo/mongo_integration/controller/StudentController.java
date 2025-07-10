@@ -21,8 +21,8 @@ public class StudentController {
 
     @Operation(summary = "Add a student", description = "Add a single student record to the database")
     @PostMapping("/addStudent")
-    public void populateStudentData(@RequestBody Student student) {
-        studentService.addStudentData(student);
+    public Student populateStudentData(@RequestBody Student student) {
+        return studentService.addStudentData(student);
     }
 
     @Operation(summary = "Add multiple students", description = "Add multiple student records to the database in a single call")
@@ -81,13 +81,6 @@ public class StudentController {
         return studentService.fetchStudentDataByEnrollmentDate(startDate, endDate);
     }
 
-    @Operation(summary = "Get student name", description = "Fetch the student name using name as query parameter")
-    @GetMapping("/getStudentByName")
-    public String fetchStudentDataByName(
-            @Parameter(description = "Student name to search") @RequestParam String name) {
-        return studentService.fetchStudentDataByName(name);
-    }
-
     @Operation(summary = "Get students by CGPA", description = "Retrieve students whose CGPA matches the given value")
     @GetMapping("/getStudentByCgpa")
     public List<Student> fetchStudentDataByCgpa(
@@ -97,13 +90,13 @@ public class StudentController {
 
     @Operation(summary = "Get average CGPA", description = "Retrieve the average CGPA of all students")
     @GetMapping("/getAvgCgpa")
-    public Long fetchStudentAvgCgpa() {
+    public Double fetchStudentAvgCgpa() {
         return studentService.fetchAverageCgpa();
     }
 
     @Operation(summary = "Get Total CGPA", description = "Retrieve the total CGPA of all students")
     @GetMapping("/getTotalCgpa")
-    public Long fetchStudentTotalCgpa() {
+    public Double fetchStudentTotalCgpa() {
         return studentService.fetchTotalCgpa();
     }
 
@@ -113,6 +106,12 @@ public class StudentController {
         return studentService.fetchCgpaStats();
     }
 
+    @Operation(summary = "Get students by subject name", description = "Retrieve students who are enrolled in a specific subject")
+    @GetMapping("/getStudentBySubject/{subjectName}")
+    public List<Student> fetchStudentDataBySubjectName(
+            @Parameter(description = "Subject name to filter by") @PathVariable String subjectName) {
+        return studentService.fetchStudentDataBySubjectName(subjectName);
+    }
 
     @Operation(summary = "Delete student", description = "Delete a specific student by providing the student object")
     @DeleteMapping("/deleteStudent")

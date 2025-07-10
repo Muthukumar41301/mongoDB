@@ -1,14 +1,12 @@
 package com.demo.mongo_integration.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Getter
-@Setter
+@Data
 @Document(collection = "roles")
 public class Roles {
 

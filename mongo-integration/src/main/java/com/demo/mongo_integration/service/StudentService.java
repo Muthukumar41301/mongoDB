@@ -32,13 +32,14 @@ public class StudentService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void addStudentData(Student student) {
+    public Student addStudentData(Student student) {
         try {
             String studentJson = objectMapper.writeValueAsString(student);
             redisCacheProvider.addData("student", student.getId(), studentJson);
         } catch (Exception e) {
             log.error("Failed to store student in Redis", e);
         }
+        return studentRepository.save(student);
     }
 
     public void addMultipleStudentsData(List<Student> students) {
@@ -70,27 +71,27 @@ public class StudentService {
         return studentRepository.findByEnrollmentDateBetweenOrderByEnrollmentDate(startDate, endDate);
     }
 
-    public String fetchStudentDataByName(String name) {
-        return studentRepository.findByNameIgnoreCase(name);
-    }
-
     public List<Student> fetchStudentDataByCgpa(Double cgpa) {
         return studentRepository.findByCgpaGreaterThanEqual(cgpa);
     }
 
-    public Long fetchAverageCgpa() {
+    public List<Student> fetchStudentDataBySubjectName(String subjectName) {
+        return studentRepository.findBySubjectMarks_SubjectName(subjectName);
+    }
+
+    public Double fetchAverageCgpa() {
         return studentRepository.avgCgpa();
     }
 
     public void deleteStudentData(Student student) {
-        studentRepository.insert(student);
+        studentRepository.delete(student);
     }
 
     public void deleteAllStudentData() {
         studentRepository.deleteAll();
     }
 
-    public Long fetchTotalCgpa() {
+    public Double fetchTotalCgpa() {
         return studentRepository.totalCgpa();
     }
 
